@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -128,16 +129,16 @@ public class BridgeBuildingHandler
         int stringHad = 0;
 
         for (int i = 0; i < 36; i++) {
-            final ItemStack stack = player.inventory.mainInventory[i];
+            final ItemStack stack = player.inventory.mainInventory.get(i);
             if (stack == null) {
                 continue;
             }
             final String name = stack.getItem().getUnlocalizedName();
             if (name.equals(BridgeBuildingHandler.string)) {
-                stringHad += stack.stackSize;
+                stringHad += stack.getMaxStackSize();
             }
             if (name.equals(BridgeBuildingHandler.woodSlab)) {
-                slabsHad += stack.stackSize;
+                slabsHad += stack.getMaxStackSize();
             }
         }
         if (slabsHad >= slabsNeeded && stringHad >= stringNeeded)
@@ -157,30 +158,30 @@ public class BridgeBuildingHandler
         int i = 0;
 
         for (; i < 36; i++) {
-            final ItemStack stack = player.inventory.mainInventory[i];
+            final ItemStack stack = player.inventory.mainInventory.get(i);
             if (stack == null) {
                 continue;
             }
             final String name = stack.getItem().getUnlocalizedName();
             if (name.equals(BridgeBuildingHandler.string)) {
-                if (stack.stackSize > stringNeeded) {
-                    stack.stackSize = stack.stackSize - stringNeeded;
+                if (stack.getCount() > stringNeeded) {
+                	stack.setCount(stack.getCount()-stringNeeded);
                     stringNeeded = 0;
                 }
                 else {
-                    stringNeeded -= stack.stackSize;
-                    player.inventory.mainInventory[i] = null;
+                    stringNeeded -= stack.getMaxStackSize();
+                    player.inventory.mainInventory.set(i,ItemStack.EMPTY);
                     continue;
                 }
             }
             else if (name.equals(BridgeBuildingHandler.woodSlab)) {
-                if (stack.stackSize > slabsNeeded) {
-                    stack.stackSize = stack.stackSize - slabsNeeded;
+                if (stack.getCount() > slabsNeeded) {
+                	stack.setCount(stack.getCount()-slabsNeeded);
                     slabsNeeded = 0;
                 }
                 else {
-                    slabsNeeded -= stack.stackSize;
-                    player.inventory.mainInventory[i] = null;
+                    slabsNeeded -= stack.getMaxStackSize();
+                    player.inventory.mainInventory.set(i,ItemStack.EMPTY);
                     continue;
                 }
             }

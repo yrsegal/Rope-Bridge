@@ -47,7 +47,7 @@ public class BuildMessage implements IMessage {
         public IMessage onMessage (BuildMessage message, MessageContext ctx) {
 
             if (ctx.side == Side.SERVER) {
-                final EntityPlayer player = ctx.getServerHandler().playerEntity;
+                final EntityPlayer player = ctx.getServerHandler().player;
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask( () ->
                     BridgeBuildingHandler.newBridge(player, player.getHeldItemMainhand(), -1, message.from, message.to));
             }
